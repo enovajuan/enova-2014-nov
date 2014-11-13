@@ -375,11 +375,11 @@ Take it down and pass it around, no more bottles of beer on the wall.
 No more bottles of beer on the wall, no more bottles of beer.
 Go to the store and buy some more, 99 bottles of beer on the wall.
 VERSES
-    assert_equal expected, bottles.song
+    assert_equal expected, bottles.phrases
   end
 
   def test_that_the_song_consists_of_all_the_verses
-    assert_equal bottles.verses(99, 0), bottles.song
+    assert_equal bottles.verses(99, 0), bottles.phrases
   end
 
 end

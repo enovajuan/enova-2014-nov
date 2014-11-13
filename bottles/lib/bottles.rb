@@ -1,3 +1,16 @@
+module BottleNumberFactory
+  refine Fixnum do
+    def to_bottle_number
+      if Object.const_defined?("BottleNumber#{self}")
+        Object.const_get("BottleNumber#{self}")
+      else
+        BottleNumber
+      end.new(self)
+    end
+  end
+end
+using BottleNumberFactory
+
 class Bottles
 
   def song
@@ -9,16 +22,11 @@ class Bottles
   end
 
   def verse(number)
-    bottle_number      = make_bottle_number(number)
-    next_bottle_number = make_bottle_number(bottle_number.successor)
+    bottle_number      = number.to_bottle_number
     "#{bottle_number} of beer on the wall, ".capitalize +
     "#{bottle_number} of beer.\n" +
     "#{bottle_number.action}, " +
-    "#{next_bottle_number} of beer on the wall.\n"
-  end
-
-  def make_bottle_number(number)
-    BottleNumber.new(number)
+    "#{bottle_number.successor} of beer on the wall.\n"
   end
 end
 
@@ -34,42 +42,56 @@ class BottleNumber
   end
 
   def container
-    if number == 1
-      "bottle"
-    else
-      "bottles"
-    end
+    "bottles"
   end
 
   def pronoun
-    if number == 1
-      "it"
-    else
-      "one"
-    end
+    "one"
   end
 
   def amount
-    if number == 0
-      "no more"
-    else
-      number.to_s
-    end
+    number.to_s
   end
 
   def action
-    if number == 0
-      "Go to the store and buy some more"
-    else
-      "Take #{pronoun} down and pass it around"
-    end
+    "Take #{pronoun} down and pass it around"
   end
 
   def successor
-    if number == 0
-      99
-    else
-      number - 1
-    end
+    (number-1).to_bottle_number
+  end
+end
+
+class BottleNumber0 < BottleNumber
+  def amount
+    "no more"
+  end
+
+  def action
+    "Go to the store and buy some more"
+  end
+
+  def successor
+    99.to_bottle_number
+  end
+end
+
+class BottleNumber1 < BottleNumber
+  def container
+    "bottle"
+  end
+
+  def pronoun
+    "it"
+  end
+end
+
+class BottleNumber6 < BottleNumber
+  def amount
+    "1"
+  end
+
+  def container
+    "six pack"
   end
 end
